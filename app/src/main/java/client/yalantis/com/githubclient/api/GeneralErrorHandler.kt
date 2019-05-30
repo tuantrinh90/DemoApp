@@ -11,14 +11,10 @@ import java.net.SocketException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 
-/**
- * Created by andrewkhristyan on 10/31/16.
- */
-
 class GeneralErrorHandler(view: BaseMvpView? = null,
                           private val mShowError: Boolean = false,
-                          val onFailure: (Throwable, ErrorBody?, Boolean) -> Unit)
-: Action1<Throwable> {
+                          val onFailure: (Throwable, String?, Boolean) -> Unit)
+    : Action1<Throwable> {
 
     private val mViewReference: WeakReference<BaseMvpView>
 
@@ -28,14 +24,14 @@ class GeneralErrorHandler(view: BaseMvpView? = null,
 
     override fun call(throwable: Throwable) {
         var isNetwork = false
-        var errorBody: ErrorBody? = null
+        var errorBody: String? = null
         if (isNetworkError(throwable)) {
             isNetwork = true
             showMessage(R.string.internet_connection_unavailable)
         } else if (throwable is HttpException) {
-            errorBody = ErrorBody.parseError(throwable.response())
+            errorBody = throwable.message()
             if (errorBody != null) {
-                handleError(errorBody)
+                handleError()
             }
         }
 
@@ -48,10 +44,8 @@ class GeneralErrorHandler(view: BaseMvpView? = null,
                 throwable is SocketTimeoutException
     }
 
-    private fun handleError(errorBody: ErrorBody) {
-        if (errorBody.code != ErrorBody.UNKNOWN_ERROR) {
-            showErrorIfRequired(R.string.server_error)
-        }
+    private fun handleError() {
+        showErrorIfRequired(R.string.server_error)
     }
 
     private fun showErrorIfRequired(@StringRes strResId: Int) {

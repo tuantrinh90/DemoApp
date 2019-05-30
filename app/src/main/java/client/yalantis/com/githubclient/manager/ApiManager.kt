@@ -1,24 +1,19 @@
 package client.yalantis.com.githubclient.manager
 
-import client.yalantis.com.githubclient.api.GithubService
+import client.yalantis.com.githubclient.api.ApiService
+import client.yalantis.com.githubclient.api.ApiSettings
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
-import retrofit2.converter.moshi.MoshiConverterFactory
+import retrofit2.converter.gson.GsonConverterFactory
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 
-
-/**
- * Created by andrewkhristyan on 10/5/16.
- */
 object ApiManager {
-    private const val SERVER: String = "https://api.github.com/"
-
-    private lateinit var mGithubService: GithubService
-
+    private const val SERVER: String = "http://admin.adtdisplay.vn/"
+    private lateinit var mApiService: ApiService
 
     init {
         val retrofit = initRetrofit()
@@ -34,6 +29,7 @@ object ApiManager {
             networkInterceptors().add(Interceptor { chain ->
                 val original = chain.request()
                 val request = original.newBuilder()
+                        .addHeader(ApiSettings.AUTHORIZATION, ApiSettings.BEARER)
                         .method(original.method(), original.body())
                         .build()
                 chain.proceed(request)
@@ -43,28 +39,20 @@ object ApiManager {
 
         return Retrofit.Builder().baseUrl(SERVER)
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                .addConverterFactory(createMoshiConverter())
+                .addConverterFactory(createGsonConverterFactory())
                 .client(client.build())
                 .build()
     }
 
-    private fun createMoshiConverter(): MoshiConverterFactory = MoshiConverterFactory.create()
+    private fun createGsonConverterFactory(): GsonConverterFactory = GsonConverterFactory.create()
 
     private fun initServices(retrofit: Retrofit) {
-        mGithubService = retrofit.create(GithubService::class.java)
+        mApiService = retrofit.create(ApiService::class.java)
     }
 
-    fun loadOrganizationRepos(organizationName: String, reposType: String) =
-            mGithubService.getOrganizationRepos(organizationName, reposType)
+    fun getHomeList() =
+            mApiService.getHome()
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())!!
-
-
-
-    fun loadRepository(owner: String, name: String) =
-            mGithubService.getRepository(owner, name)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())!!
-
 
 }

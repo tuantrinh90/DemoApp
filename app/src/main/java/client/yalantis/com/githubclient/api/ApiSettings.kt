@@ -1,16 +1,10 @@
 package client.yalantis.com.githubclient.api
 
-/**
- * Created by Alexey on 07.10.2016.
- */
 
 object ApiSettings {
-    const val PATH_ORGANIZATION = "organization"
-    const val PARAM_REPOS_TYPE = "type"
-
-    const val PATH_REPO = "repo"
-    const val PATH_OWNER = "owner"
-
-    const val ORGANIZATION_REPOS = "orgs/{$PATH_ORGANIZATION}/repos"
-    const val REPOSITORY = "/repos/{$PATH_OWNER}/{$PATH_REPO}"
+    const val HOME = "api/v1/home?deviceId=33&orientation=0"
+    const val URL = "http://admin.adtdisplay.vn/"
+    const val PHOTO = "PHOTO"
+    const val AUTHORIZATION = "Authorization"
+    const val BEARER = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MzYsImlzQWN0aXZlIjp0cnVlfQ.Pgq2WTdzdUGEo9Cys4qUsmfniowPU8akbCgiDSePy-Y"
 }

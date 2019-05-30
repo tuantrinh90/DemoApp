@@ -5,9 +5,6 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
 
-/**
- * Created by andrewkhristyan on 10/2/16.
- */
 abstract class BaseMvpActivity<in V : BaseMvpView, T : BaseMvpPresenter<V>>
     : AppCompatActivity(), BaseMvpView {
 

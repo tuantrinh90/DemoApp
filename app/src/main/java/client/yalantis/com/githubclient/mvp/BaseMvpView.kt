@@ -3,9 +3,6 @@ package client.yalantis.com.githubclient.mvp
 import android.content.Context
 import android.support.annotation.StringRes
 
-/**
- * Created by andrewkhristyan on 10/2/16.
- */
 interface BaseMvpView {
 
     fun getContext(): Context
